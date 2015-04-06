@@ -1,0 +1,56 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script language="javascript" src="template.js"></script>
+		<script language="javascript">
+		var example1 = {
+			Name: "Bob",
+			Age: 22
+		};
+		var example1Template = "Hello ${Name}! You're ${Age} year(s) old.";
+
+		var example2 = {
+			Name: "Bob",
+			Age: 22,
+			Legal: "legal for you to drink!",
+			NotLegal: "illegal for you to drink, so don't do it!",
+			LegalToDrink: function(obj) { 
+				if(obj.Age > 21) {
+					return "${Legal}";
+				} else {
+					return "${NotLegal}";
+				}
+			}
+		};
+		var example2Template = "${Name} you're ${Age} so it's ${LegalToDrink}";
+
+		var example3 = {
+			Table: "<table>${Header}${Body}</table>",
+			Header: "<thead><tr><th>ID</th><th>Value</th></tr></thead>",
+			Body: "<tbody>${BodyRows}</tbody>",
+			BodyRow: "<tr><td>${id}</td><td>${value}</td></tr>",
+			BodyRows: function(obj) {
+				var rows = "";
+				$.each(obj.Rows, function(k, v) { 
+					rows += Template(obj.BodyRow, v);
+				});
+				return rows;
+			},
+			Rows: [{id: 0, value: "Bananna"}, {id: 1, value: "Orange"}, {id: 3, value: "Pear"},]
+		}
+		var example3Template = "${Table}";
+
+		$(function() {
+			$("#example1").html( Template(example1Template, example1) );
+			$("#example2").html( Template(example2Template, example2) );
+			$("#example3").html( Template(example3Template, example3) );
+		});
+		
+		</script>
+	</head>
+	<body>
+		<div id="example1"></div>
+		<div id="example2"></div>
+		<div id="example3"></div>	
+	</body>
+</html>
