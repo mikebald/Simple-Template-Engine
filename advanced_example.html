@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script language="javascript" src="template.js"></script>
+		<script language="javascript">
+		var BaseTable = {
+            Table: "<table>${Header}${Body}</table>",
+			Header: "<thead><tr><th>ID</th><th>${HeaderName} Name</th><th>Value</th></tr></thead>",
+			Body: "<tbody>${BodyRows}</tbody>",
+			BodyRow: "<tr><td>${id}</td><td>${name}</td><td class='${ValueClass}'>${value}</td></tr>",
+            BodyRows: function(obj) {
+                var rows = "";
+				$.each(obj.RowData, function(k, v) {
+					v.ValueClass = obj.ValueClass; // Need to provide the template obj data
+                    rows += Template(obj.BodyRow, v);
+				});
+                
+				return rows;
+			},
+            ValueClass: function(obj) {
+                if(parseFloat(obj.value) > 0) {
+                    return "number_postitive";
+                } else {
+                    return "number_negative";
+                }
+                
+            }
+		};
+        
+        var FruitTable = jQuery.extend(true, {}, BaseTable), // Clone
+            VegetableTable = jQuery.extend(true, {}, BaseTable); // Clone
+            
+        FruitTable.HeaderName = "Fruit"
+        FruitTable.RowData = [{id: 0, name: "Bananna", value: "1.25"}, {id: 1, name: "Orange", value: "12.80"}, {id: 3, name: "Pear", value: "-6.36"}];
+        
+        VegetableTable.HeaderName = "Vegetable";
+        VegetableTable.RowData = [{id: 0, name: "Brocilli", value: "2.50"}, {id: 1, name: "Cauliflower", value: "-1.25"}];
+
+		$(function() {
+			$("#fruitTable").html( Template("${Table}", FruitTable) );
+            $("#vegetableTable").html( Template("${Table}", VegetableTable) );
+		});
+		
+		</script>
+        <style>
+            .number_negative { color: red; }
+            .number_postitive { color: black; }
+        </style>
+	</head>
+	<body>
+		<div id="fruitTable"></div>
+        <hr>
+		<div id="vegetableTable"></div>
+	</body>
+</html>
